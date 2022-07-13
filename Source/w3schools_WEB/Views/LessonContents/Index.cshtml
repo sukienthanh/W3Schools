@@ -1,0 +1,255 @@
+﻿@{
+    Layout = "Admin_Layout";
+    ViewData["Title"] = "Lesson Contents";
+}
+<div class="page-content">
+    <div class="p-2">
+        <div class="float-right">
+            <button id="btnAddNew" type="button" class="btn btn-info"><i class="mr-2 fa fa-plus"></i>Add</button>  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="text-center grid-ctn">
+        <div id="listData"></div>
+    </div>
+</div>
+
+<script>
+    var data = [];
+
+    const listLesson = new DevExpress.data.CustomStore({
+        key: "lessonId",
+        loadMode:"raw",
+        load: function () {
+            var d = $.Deferred();
+            $.ajax({
+                "async": true,
+                "crossDomain": true,
+                "url": "@Url.Action("GetListLesson", "Lesson")",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "method": "GET"
+            }).done(function (result) {
+                d.resolve(result);
+            }).fail(function (xhr) {
+                console.log("failed");
+            });
+            return d.promise();
+        }
+    });
+
+    const listContentType = new DevExpress.data.CustomStore({
+        key: "contentTypeId",
+        loadMode:"raw",
+        load: function () {
+            var d = $.Deferred();
+            $.ajax({
+                "async": true,
+                "crossDomain": true,
+                "url": "@Url.Action("GetListContentType", "ContentType")",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "method": "GET"
+            }).done(function (result) {
+                d.resolve(result);
+            }).fail(function (xhr) {
+                console.log("failed");
+            });
+            return d.promise();
+        }
+    });
+
+    var store = new DevExpress.data.CustomStore({
+        key: ["lessonContentId"],
+        load: function () {
+            var d = $.Deferred();
+                $.ajax({
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "@Url.Action("GetListLessContent", "LessonContents")",
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "cache-control": "no-cache"
+                    },
+                    "method": "GET"
+                }).done(function (result) {
+                    data = result;
+                    d.resolve(result);
+                }).fail(function (xhr) {
+                    console.log("failed");
+                });
+
+            return d.promise();
+        }
+    });
+
+    var grid = $("#listData").dxDataGrid({
+        dataSource: store,
+        paging: {
+            pageSize: 5
+        },
+        pager: {
+            showPageSizeSelector: true,
+            allowedPageSizes: [5, 10, 20, 50],
+            showNavigationButtons: true,
+            showInfo: true
+        },
+        remoteOperations: false,
+        selection: {
+            mode: 'simple'
+        },
+        editing: {
+            mode: "row",
+            useIcons: true,
+            allowAdding: true,
+            allowUpdating: true,
+            allowDeleting: true
+        },
+        repaintChangesOnly: true,
+        allowColumnReordering: true,
+        rowAlternationEnabled: true,
+        showBorders: true,
+        forceIsoDateParsing: true,
+        headerFilter: {
+            visible: true
+        },
+        filterRow: { visible: true },
+        dateSerializationFormat: "yyyy-MM-ddTHH:mm:ssx",
+        allowColumnResizing: true,
+        columnAutoWidth: true,
+        //columnHidingEnabled: true,
+        onToolbarPreparing: function (e) {
+            e.toolbarOptions.items[0].visible = false;
+            }, masterDetail: {
+                enabled: true,
+                template(container, options) {
+                    const curr = options.data;
+
+                    $('<div>')
+                        .html(curr.content)
+                        .appendTo(container);
+                }
+            },
+        columns: [
+            {
+                caption: "Lesson Content Id",
+                dataField: "lessonContentId",
+                allowEditing: false,
+                width: "15%",
+                visible: false
+            },
+            {
+                caption: "Lesson Content Title",
+                dataField: "contentTitle",
+                width: "15%",
+                validationRules: [{
+                    type: "required",
+                    message: "Lesson Content Title is required"
+                }]
+            },
+            {
+                caption: "Lesson ContentType",
+                dataField: "contentTypeId",
+                width: "15%",
+                validationRules: [{
+                    type: "required",
+                    message: "LessonContentType is required"
+                }], lookup: {
+                    dataSource: listContentType,
+                    valueExpr: 'contentTypeId',
+                    displayExpr: 'contentTypeName',
+                },
+            },
+            {
+                caption: "Lesson",
+                dataField: "lessonId",
+                width: "15%",
+                allowEditing: false,
+                visible: true, validationRules: [{
+                    type: "required",
+                    message: "LessonName is required"
+                }],
+                lookup: {
+                    dataSource: listLesson,
+                    valueExpr: 'lessonId',
+                    displayExpr: 'lessonName',
+                },
+            },
+            {
+                caption: "Content",
+                dataField: "content",
+                width: "40%",
+                validationRules: [{
+                    type: "required",
+                    message: "Content Type is required"
+                }],
+            },
+            {
+                caption: "ContentOrder",
+                dataField: "contentOrder",
+                width: "10%",
+                validationRules: [{
+                    type: "required",
+                    message: "ContentOrder is required"
+                }],
+            },{
+                type: "buttons",
+                width: 110,
+                buttons: [
+                    {
+                        hint: "Edit",
+                        icon: "edit",
+                        onClick: function(e) {
+                            location.href = "@Url.Action("AddEditLessonContentsView", "LessonContents")?id=" + e.row.data.lessonContentId + "&method=edit";
+                        }
+                    },
+                    {
+                        hint: "Delete",
+                        icon: "trash",
+                        onClick: function (e) {
+                            var result = DevExpress.ui.dialog.confirm("<i>Are you sure?</i>", "Confirm changes");
+                            result.done(function (val) {
+                                if (val) {
+                                    $.ajax({
+                                        "async": true,
+                                        "crossDomain": true,
+                                        "url": "@Url.Action("DeleteLessonContent","LessonContents")?id=" + e.row.data.lessonContentId,
+                                        "headers": {
+                                            "Content-Type": "application/json",
+                                            "cache-control": "no-cache"
+                                        },
+                                        "method": "get"
+
+                                    }).done(function (result) {
+                                        if (result.status == 1) {
+                                            DevExpress.ui.notify(result.message, "success", 2000);
+                                            grid.refresh();
+                                        }
+                                        else
+                                            DevExpress.ui.notify(result.message, "warning", 2000);
+                                    }).fail(function (xhr) {
+                                        DevExpress.ui.notify("Error!Not completed", "warning", 2000);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                ]
+            }
+            ]
+        }).dxDataGrid("instance");
+
+    $("#btnAddNew").on("click", function () {
+        location.href = "@Url.Action("AddEditLessonContentsView", "LessonContents")?method=insert&order=" + (data[data.length - 1].contentOrder + 1);
+    });
+
+    $(function () {
+        $(".breadcrumb").children().last().find("span").text("Lesson Content");
+    })
+
+</script>

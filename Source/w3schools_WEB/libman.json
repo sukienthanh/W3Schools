@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "jsdelivr",
+      "library": "codemirror@5.63.3",
+      "destination": "wwwroot/lib/codemirror/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@coreui/coreui@4.0.5",
+      "destination": "wwwroot/coreui/coreui/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@popperjs/core@2.10.2",
+      "destination": "wwwroot/popperjs/core/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "simplebar-core@1.0.7",
+      "destination": "wwwroot/simplebar-core/"
+    }
+  ]
+}

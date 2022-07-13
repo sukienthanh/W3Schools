@@ -1,0 +1,184 @@
+﻿@{
+    Layout = null;
+}
+@using w3schools_API.Models;
+@model w3schools_API.Models.Example;
+@using Newtonsoft.Json
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewData["Title"] Example</title>
+    <link rel="icon" href="~/image/favicon.ico" />
+
+    <!--bootstrap, jquery w3schools-->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!--front-end-->
+    <link href="~/css/base.css" rel="stylesheet" />
+    <link href="~/css/reset.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="~/js/site.js"></script>
+    <!-- live code js-->
+    <script src="~/js/editor.js"></script>
+    <!--font-awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+    <!--codemirror lib-->
+    <script src="~/lib/codemirror/lib/codemirror.js"></script>
+    <link href="~/lib/codemirror/lib/codemirror.css" rel="stylesheet" />
+    <link href="~/lib/codemirror/theme/3024-day.css" rel="stylesheet" />
+    <script src="~/lib/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="~/lib/codemirror/addon/edit/closetag.js"></script>
+    <script src="~/lib/codemirror/addon/runmode/colorize.js"></script>
+    <script src="~/lib/codemirror/mode/xml/xml.js"></script>
+    <script src="~/lib/codemirror/mode/javascript/javascript.js"></script>
+    <script src="~/lib/codemirror/mode/css/css.js"></script>
+    <script src="~/lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+</head>
+<body onresize="getSize()">
+    <div class="p-2">
+        <div class="col-md-12" id="ctner">
+            <div class="w-100" id="Content">
+                <div class="row">
+                    <div class="p-1 col-sm-12">
+                        <div id="btns" class="ml-md-5">
+                            <button onclick="rotate()" class="btn mr-2" id="rotate">
+                                <img class="img-fluid" src="~/image/iconb.png" />
+                            </button>
+                            <button id="runBtn" class="btn btn-success pl-3 pr-3">Run<i class="pl-2 pr-2 fa fa-chevron-right"></i></button>
+                        </div>
+                        <div id="framesize" style="">
+                            <span>Result Size:</span>
+                        </div>
+                    </div>
+                    <div class="workspace col-md-6 pr-md-1 p-1">
+                        <textarea class="p-2" name="sourceCode" id="sourceCode"></textarea>
+                    </div>
+                    <div class="workspace col-md-6 pl-md-1 p-1">
+                        <iframe class="p-2" name="targetCode" id="targetCode"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/editor.js"></script>
+</body>
+</html>
+<style>
+
+    body {
+        background-color: #add8e6;
+    }
+
+    #framesize {
+        position: absolute;
+        right: 2rem;
+        top: 40%
+    }
+
+    #rotate {
+        border: unset;
+        padding: 0 0;
+    }
+
+    .row {
+        font-family: fontawesome;
+    }
+
+    textarea:focus {
+        outline: none !important;
+        border: 1px solid #808080;
+        box-shadow: 0 0 0.2rem #0094ff;
+    }
+
+    #ctner {
+        background-color: #E7E9EB;
+        margin-top: 8rem;
+    }
+
+    #targetCode {
+        background-color: #fff !important;
+        border: unset;
+    }
+</style>
+<script>
+    const data = @Html.Raw(JsonConvert.SerializeObject(Model));
+    var content = data.Content;
+    $("#sourceCode").text(content);
+    var iframe;
+    function getSize() {
+        iframe = document.getElementById('targetCode');
+        $("#framesize").find("span").text("Result Size: " + iframe.contentWindow.innerWidth + " x " + iframe.contentWindow.innerHeight);
+    }
+    function renderEditor() {
+
+        editor = CodeMirror.fromTextArea($("#sourceCode")[0], {
+            // mode: "simple",
+            //extraKeys: { "Ctrl-Space": "autocomplete" },
+            //theme: "3024-dayv",
+            //smartIndent: true,
+            //value: html,
+            lineNumbers: true,
+            //autoCloseTags: true,
+            //keyMap: "sublime",
+            //scrollbarStyle:"overlay",
+        });
+        editor.on("change", function (cm) {
+            content = cm.getValue();
+            $("#sourceCode").html(content);
+        });
+        editor.setSize("100%", "75vh");
+        var bUrl = "https://localhost:44322";
+        var header =
+            '<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0" />' +
+            '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>' +
+            '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"><\/script>' +
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"><\/script>' +
+            '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"><\/script>' +
+            '<script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"><\/script>' +
+            '<!--front-end-->' +
+            '<link href="' + bUrl + '/css/site.css" rel="stylesheet"/>' +
+            '<link href="' + bUrl + '/css/base.css" rel="stylesheet"/>' +
+            '<!--font-awesome-->' +
+            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
+
+        iframe = document.getElementById('targetCode');
+        iframe.contentDocument.head.innerHTML = header;
+        $("#runBtn").click(function () {
+            content = $("#sourceCode").val();            
+            runCode();
+        });
+
+    }
+    function rotate() {
+        var target = $(".workspace");
+        if (target.hasClass("col-md-6")) {
+            target.removeClass("col-md-6").addClass("col-md-12 p-2");
+            target.children().css("height", "35vh");
+        } else if (target.hasClass("col-md-12")) {
+            target.removeClass("col-md-12 p-2").addClass("col-md-6");
+            target.children().css("height", "75vh");
+        }
+        getSize();
+    }
+
+    function runCode() {
+        iframe = document.getElementById('targetCode');
+        iframe = iframe.contentDocument;        
+        iframe.body.innerHTML = content;
+    }
+    $(function () {
+        //render editor
+        renderEditor();
+        getSize();        
+    });
+</script>
+
+
+

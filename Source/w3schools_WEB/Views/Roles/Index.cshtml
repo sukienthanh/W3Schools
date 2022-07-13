@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Role";
+    Layout = "Admin_Layout";
+}
+<div class="page-content">
+    <div class="p-4">
+        <div class="justify-content-end d-inline-flex w-100">
+            <button id="addBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-plus"></i>Add</button>
+            <button id="saveBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-save"></i>Save</button>
+            <button id="refreshBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-refresh"></i>Refresh</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="text-center grid-ctn">
+        <div id="grid"></div>
+    </div>
+</div>
+<script>
+    var table = "Roles";
+
+    var columns = [{
+        caption: "Role Id",
+        dataField: "roleId",
+        visible: false,
+        allowEditing: false,
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+            caption: "Role Name",
+            dataField: "roleName",
+        validationRules: [{
+            type: "required",
+            message: "RoleName field is required"
+        }]
+    }];
+</script>
+<script src="~/js/initTable.js"></script>
+<script>
+    dataGrid.columnOption("dateModified", "visible", true);
+    dataGrid.columnOption("dateCreated", "visible", true);
+    dataGrid.columnOption("createdBy", "visible", true);
+    dataGrid.columnOption("modifiedBy", "visible", true);
+    $(function () {
+        $(".breadcrumb").children().last().find("span").text("Role");
+    })
+</script>

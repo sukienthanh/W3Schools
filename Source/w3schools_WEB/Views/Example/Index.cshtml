@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Lesson Categories";
+    Layout = "Admin_Layout";
+}
+<div class="page-content">
+    <div class="p-4">
+        <div class="justify-content-end d-inline-flex w-100">
+            <button id="addBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-plus"></i>Add</button>
+            <button id="saveBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-save"></i>Save</button>
+            <button id="refreshBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-refresh"></i>Refresh</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="text-center grid-ctn">
+        <div id="grid"></div>
+    </div>
+</div>
+<style>
+    @@media (min-width:576px) {
+        .dx-datagrid-edit-popup .dx-overlay-content.dx-popup-normal {
+            max-width: 90% !important
+        }
+    }
+
+    @@media (min-width:726px) {
+        .dx-datagrid-edit-popup .dx-overlay-content.dx-popup-normal {
+            max-width: 60% !important
+        }
+    }
+
+    @@media (min-width:992px) {
+        .dx-datagrid-edit-popup .dx-overlay-content.dx-popup-normal {
+            max-width: 40% !important
+        }
+    }
+
+    @@media (max-width:576px) {
+        .dx-datagrid-edit-popup .dx-overlay-content.dx-popup-normal {
+            max-width: 100% !important;
+            min-width: 95% !important
+        }
+    }
+</style>
+<script>
+    var listContent = new DevExpress.data.CustomStore({
+        key: "lessonContentId",
+        loadMode:"raw",
+        load: function () {
+            var d = $.Deferred();
+            $.ajax({
+                "async": true,
+                "crossDomain": true,
+                "url": "@Url.Action("GetListLessContent", "LessonContents")?filt=true",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "method": "GET"
+            }).done(function (result) {
+                d.resolve(result);
+            }).fail(function (xhr) {
+                console.log("failed");
+            });
+            return d.promise();
+        }
+    });
+    var table = "Example";
+
+    var columns = [{
+        caption: "Example Id",
+        dataField: "exampleId",
+        visible: false,
+        allowEditing: false,
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+        caption: "Lesson Content",
+        dataField: "lessonContentId",
+        validationRules: [{
+            type: "required",
+            message: "LessonContent field is required"
+        }],lookup: {
+          dataSource: listContent,
+            valueExpr: 'lessonContentId',
+            displayExpr: getDisplayExpr,
+        },
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+        caption: "Content",
+        dataField: "content",
+        validationRules: [{
+            type: "required",
+            message: "Content field is required"
+        }]
+        }];
+
+    var items = [{
+        colCount: 2,
+        itemType: "group",
+        items: ["exampleId", "lessonContentId"],
+    }, {
+        itemType: "Empty"
+    }, {
+        dataField: "content",
+        editorType: "dxTextArea",
+        colSpan: 2,
+        editorOptions: {
+            height: 200
+        }
+    }, {
+        itemType: "Empty"
+    }, {
+        caption: "",
+        colCount: 2,
+        itemType: "group",
+        items: ["dateCreated", "dateModified", "createdBy", "modifiedBy"],
+
+        }];
+    function getDisplayExpr(item) {
+        if (!item) {
+            return '';
+        }
+
+        return `${item.contentTitle} (ID: ${item.lessonContentId})`;
+    }
+</script>
+<script src="~/js/initTable.js"></script>
+<script>
+    dataGrid.columnOption("dateModified", "visible", true);
+    dataGrid.columnOption("dateCreated", "visible", true);
+    dataGrid.columnOption("createdBy", "visible", true);
+    dataGrid.columnOption("modifiedBy", "visible", true);
+    $(function () {
+        $(".breadcrumb").children().last().find("span").text("Example Code");
+
+        var editing = {
+            mode: "popup",
+            allowUpdating: true,
+            popup: {
+                title: "Example Code",
+                showTitle: true,
+            },
+            form: {
+                colCount: 1,
+                items: items,
+                customizeItem: function (item) {
+                    if (!item.editorOptions) {
+                        item.editorOptions = {};
+                    }
+                    if (item.dataField === "DateCreated" || item.dataField === "DateModified" || item.dataField === "CreatedBy" || item.dataField === "ModifiedBy" || item.dataField === "RecordStatus")
+                        item.editorOptions.readOnly = true;
+                },
+            },
+        };
+        dataGrid ? (
+            dataGrid.option("editing.popup.elementAttr", { id: "editpopup" }),
+            dataGrid.option("editing", editing)
+        ) : "";
+    })
+
+</script>

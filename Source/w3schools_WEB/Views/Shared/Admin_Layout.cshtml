@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] W3Schools Admin Page </title>
+    <link rel="icon" href="~/image/favicon.ico" />
+    <!--bootstrap, jquery w3schools-->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,900&display=swap" rel="stylesheet">
+    <!--devextreme-->
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.1.6/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.1.6/css/dx.light.css" />
+    <!-- template CSS -->
+    <link rel="stylesheet" href="~/admin/dist/css/adminlte.min.css">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/base.css" rel="stylesheet" />
+
+    <!--end template-->
+    <!--font-awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" />
+    <!--codemirror lib-->
+    <link href="~/lib/codemirror/lib/codemirror.css" rel="stylesheet" />
+    <link href="~/lib/codemirror/theme/3024-day.css" rel="stylesheet" />
+
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="@Url.Action("Index","Admin")" class="nav-link">Home</a>
+                </li>                
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- User info -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a href="@Url.Action("Signout","Auth")" class="dropdown-item" id="signout">
+                            <i class="fas fa-sign-out-alt mt-2 mr-2"></i>Sign out                            
+                        </a>
+                        @*<div class="dropdown-divider"></div>*@
+                    </div>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <div class="text-center">
+                <a href="@Url.Action("Index","Home")" class="brand-link"><img id="logo" src="~/image/favicon.ico" /></a>
+            </div>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 " id="sidebar">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item"><a href="@Url.Action("Index","Lesson")" class="nav-link text-light"><i class="nav-icon fas fa-book-reader"></i><span>Lesson</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","LessonContents")" class="nav-link text-light"><i class="nav-icon fas fa-file-code"></i><span>Lesson Content</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","LessonCategories")" class="nav-link text-light"><i class="nav-icon fas fa-layer-group"></i><span>Lesson Category</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","ContentType")" class="nav-link text-light"><i class="nav-icon fas fa-file-alt"></i><span>Content Type</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","Users")" class="nav-link text-light"><i class="nav-icon fas fa-user"></i><span>User</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","Roles")" class="nav-link text-light"><i class="nav-icon fas fa-user-tag"></i><span>Role</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","Example")" class="nav-link text-light"><i class="nav-icon fas fa-code"></i><span>Example Code</span></a></li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb my-0 ms-2">
+                        <li class="breadcrumb-item"><span>Home</span></li>
+                        <li class="breadcrumb-item active"><span></span></li>                        
+                    </ol>
+                </nav>
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="w-100">
+                    <!-- Javascript -->
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                    <script src="https://unpkg.com/devextreme-quill/dist/dx-quill.min.js"></script>
+                    <script src="https://cdn3.devexpress.com/jslib/21.1.6/js/dx.all.js"></script>
+                    <script src="~/lib/codemirror/lib/codemirror.js"></script>
+                    <script src="~/lib/codemirror/addon/edit/closebrackets.js"></script>
+                    <script src="~/lib/codemirror/addon/edit/closetag.js"></script>
+                    <script src="~/lib/codemirror/addon/runmode/colorize.js"></script>
+                    @*<script src="~/lib/codemirroraddon/hint/show-hint.js"></script>
+                    <script src="~/lib/codemirror/addon/hint/xml-hint.js"></script>
+                    <script src="~/lib/codemirror/addon/hint/html-hint.js"></script>*@
+                    <script src="~/lib/codemirror/mode/xml/xml.js"></script>
+                    <script src="~/lib/codemirror/mode/javascript/javascript.js"></script>
+                    <script src="~/lib/codemirror/mode/css/css.js"></script>
+                    <script src="~/lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+                    <!-- live code js-->
+                    <script src="~/js/editor.js"></script>
+                    <script src="~/admin/dist/js/adminlte.min.js"></script>
+                    <div class="pl-3 pr-3">@RenderBody()</div>                    
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        <footer class="main-footer text-black-50 text-center">
+            <small>Copyright &copy; 2021 <a class="text-info" href="#">W3Schools  </a> . All rights reserved.   </small>                        
+        </footer>
+    </div>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

@@ -1,0 +1,20 @@
+﻿:root {
+    --green-color: #04aa6d;
+    --white-color: #fff;
+    --black-color: #000;
+    --text-color: #333;
+    --sidebar-bg: #e7e9eb;
+    --sidebar-hover: #cccccc;
+}
+
+* {
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+    line-height: 1.6rem;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
+    box-sizing: border-box;
+}

@@ -1,0 +1,125 @@
+﻿@{ 
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Login";
+}
+<div class="container">
+    <div id="box">
+        <div id="inside-box">            
+            <form id="form">
+                <div class="form-group">
+                    <h1>Login</h1>
+                </div>
+                <div class="form-group">
+                    <div class="d-flex justify-content-between">
+                        <label class="" for="email">Email</label>
+                        <span>
+                            Need an account?
+                            <a href="@Url.Action("Signup","Auth")" class="text-success">Signup</a>
+                        </span>
+                    </div>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="pw">Password</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <div id="err" style="display:none" class="text-danger">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="w-100 btn btn-success">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    #box {        
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        width: 478px;
+        max-width: 100%;
+        max-height: 100%;
+        z-index: 150;
+        border-radius: 4px;
+        box-shadow: inset 0 0 15px 4px rgba(0,0,0,.06),0 0 15px 4px rgba(0,0,0,.06);
+    }
+    #inside-box {
+        position: relative;
+        box-sizing: border-box;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 48px;
+        background-color: #fff;
+        border: 1px solid #e3e3e3;
+        border-radius: 16px ;
+        text-align: left;
+    }
+        #inside-box h1 {
+            font-weight: 700;
+            font-size: 3rem;
+            text-align: center;
+            color: #282a35;
+            margin: 0;
+        }
+
+    input {
+        margin-top: 10px;
+        font-size: 1.4rem!important;
+    }
+
+    .form-group span {
+        font-size: 1.3rem;
+    }
+
+    #form label {
+        font-size: 1.6rem;
+        font-weight: 500;
+    }
+    #form .form-group{
+        padding-top:1.2rem;        
+    }
+    #form button {
+        border-radius: 25px;
+        font-size: 1.8rem;
+    }
+</style>
+<script>
+    $(function () {
+        $("#form").submit(function (e) {
+        e.preventDefault();
+        data = new FormData($("#form")[0]);
+        $.ajax({
+            url: "@Url.Action("LoginMethod","Auth")",
+            data: data,
+            contentType:false,
+            processData: false,
+            type: 'post',
+            dataType:"json",
+
+        }).done(function (e) {
+            if (e.status === 1) {
+                location.href = "/Admin/Index";
+            } else {
+                let messArray = (e.message).split("!");
+                $("#err").empty();
+                messArray.forEach(function (value, index) {
+                    $("#err").append("<div class='p-2'>"+value+"</div>").css("display", "block");
+                })
+            }
+        }).fail(function(e){
+            DevExpress.ui.notify("Error","warning", 5000);
+        })
+
+    })
+    })
+
+
+</script>

@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Content Type";
+    Layout = "Admin_Layout";
+}
+<div class="page-content">
+    <div class="p-4">
+        <div class="justify-content-end d-inline-flex w-100">
+            <button id="addBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-plus"></i>Add</button>
+            <button id="saveBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-save"></i>Save</button>
+            <button id="refreshBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-refresh"></i>Refresh</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="text-center grid-ctn">
+        <div id="grid"></div>
+    </div>
+</div>
+<script>
+    var table = "ContentType";
+
+    var columns = [{
+        caption: "ContentType Id",
+        dataField: "contentTypeId",
+        visible: false,
+        allowEditing: false,
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+            caption: "Content Type Name",
+            dataField: "contentTypeName",
+        validationRules: [{
+            type: "required",
+            message: "ContentTypeName field is required"
+        }]
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+            caption: "Descriptions",
+            dataField: "descriptions",
+        validationRules: [{
+            type: "required",
+            message: "Descriptions field is required"
+        }]
+    }];
+
+    $(function () {
+        $(".breadcrumb").children().last().find("span").text("Content Type");
+    })
+</script>
+<script src="~/js/initTable.js"></script>
+
+@*<script>
+    dataGrid.columnOption("dateModified", "visible", true);
+    dataGrid.columnOption("dateCreated", "visible", true);
+    dataGrid.columnOption("createdBy", "visible", true);
+    dataGrid.columnOption("modifiedBy", "visible", true);
+</script>*@

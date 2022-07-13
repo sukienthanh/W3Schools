@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var username = ViewBag.Username;
+
+}
+@using Newtonsoft.Json
+
+<script>
+    let curr;
+    let listLesson = [];
+    let listContent = [];
+    let listCate = [];
+    let name = @Html.Raw(JsonConvert.SerializeObject(username));
+    function renderSibar() {
+        $(".sidebar-list").empty();
+        for (let i = 0; i < listCate.length; i++) {
+            var listRender = listLesson.filter(x => x.lessonCateId == listCate[i].lessonCateId);
+            $(".sidebar-list").append('<li class="sidebar-item"><h1 class="sidebar-link">' + listCate[i].lessonCateName + '</h1></li>');
+            for (let i = 0; i < listRender.length;i++) {
+                $(".sidebar-list").append('<li class="sidebar-item"><a href="#" onclick="return getContent(' + listRender[i].lessonId + ')" class="sidebar-link" id="' + listRender[i].lessonId+'">' + listRender[i].lessonName + '</a></li>');
+            }
+        }
+        return true;
+    }
+
+    function getContent(id) {
+        curr = id;
+        //add active class
+        if ($(".sidebar-list").find("li.active").length > 0)
+            $(".sidebar-list").find("li.active").removeClass("active");
+        /*let index = listLesson.findIndex(x => x.lessonId == id);*/
+        /*if (typeof $(".sidebar-list").children()[index].classList !== 'undefine')*/
+        $(".sidebar-list").find("a#" + id).parent()[0].classList.add("active");
+        $.ajax({
+            "async": true,
+            "crossDomain": true,
+            "url": "@Url.Action("RenderContents", "Home")?id="+id,
+            "headers": {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            "method": "GET"
+        }).done(function (result) {
+             renderContent(result,id);
+        }).fail(function (xhr) {
+            console.log("get contents failed");
+        });
+        
+
+        return false;
+    }
+
+    function getListLesson() {
+        $.ajax({
+            "async": true,
+            "crossDomain": true,
+            "url": "@Url.Action("GetListLesson", "Lesson")",
+            "headers": {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            "method": "GET"
+        }).done(function (result) {
+            listLesson = result;
+            renderSibar();
+            getContent(listLesson[0].lessonId);
+        }).fail(function (xhr) {
+            console.log("get lesson list failed");
+        });
+    }
+    function getListCate() {
+        $.ajax({
+            "async": false,
+            "crossDomain": true,
+            "url": "@Url.Action("GetListLessonCategories", "LessonCategories")",
+            "headers": {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            "method": "GET"
+        }).done(function (result) {
+            listCate = result;
+
+        }).fail(function (xhr) {
+            console.log("get lesson categories failed");
+        });
+    }
+
+    function renderContent(data, id) {
+        var lessonName = (listLesson.filter(x => x.lessonId == id))[0].lessonName;
+        $(".content-title").text(lessonName);
+        var target = $("#content-body");
+        target.empty();
+        data.forEach(function (item, index) {
+            var title = item.contentTitle ? item.contentTitle : "";
+            var html = '<div class="text-block">' +
+                '<h2 class="text-title">' + title + '</h2>' + item.content + '</div>';
+
+            target.append(html);
+
+            if (item.content.indexOf("try-it-btn") != -1)
+                target.last().find("a.try-it-btn").attr("href", "/Example/ExampleView?id=" + item.lessonContentId);
+            if (target.html().length > 0) {
+                if (index < data.length - 1)
+                    target.append("<hr>");
+            }
+        })
+    }
+    function lessonTraversing(e, cateId) {
+
+        if ($("#items").find("li>a.active").length > 0)
+            $("#items").find("li>a.active").removeClass("active");
+        /*let index = listLesson.findIndex(x => x.lessonId == id);*/
+        /*if (typeof $(".sidebar-list").children()[index].classList !== 'undefine')*/
+        e[0].classList.add("active")
+        if ((listCate.filter(x => x.lessonCateId === cateId)).length > 0) {
+            let listLessons = listLesson.filter(x => x.lessonCateId === cateId);
+            if (listLessons.length > 0)
+                getContent(listLessons[0].lessonId);
+        }
+    }
+    function prevOrNext(type){
+        let currIndex = listLesson.findIndex(x => x.lessonId == curr);
+        let index = type === 0 ? (currIndex > 0 ? currIndex - 1 : 0) : (type === 1 ? currIndex === listLesson.length - 1 ? currIndex : currIndex + 1 : 0);
+        getContent(listLesson[index].lessonId);
+    }
+    $(".btn-next").on("click", function (e) {
+        e.preventDefault();
+        prevOrNext(1);
+    });
+    $(".btn-prev").on("click", function (e) {
+        e.preventDefault();
+        prevOrNext(0);
+    });
+    function login() {
+        if (name) {
+            $("#acc").empty().html('<ul class="navbar-nav ml-auto mr-3">' +
+                '<!-- User info -->' +
+                '<li class="nav-item dropdown">' +
+                '<a class="nav-link" data-toggle="dropdown" href="#" style="font-size:xx-large">' +
+                '<i class="fas fa-user-circle" ></i>' +
+                '<span id="username">' + name + '</span>' +
+                '</a>' +
+                '<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">' +
+                '<a href="#" onclick="return logout()" class="dropdown-item" id="signout">' +
+                '<i class="fas fa-sign-out-alt mt-2 mr-2"></i>Sign out' +
+                '</a>' +
+                '@*<div class="dropdown-divider"></div>*@' +
+                '</div>' +
+                '</li>' +
+                '</ul>');
+        }
+    }
+    function logout() {
+        $.ajax({
+            "async": true,
+            "crossDomain": true,
+            "url": "@Url.Action("SignoutWithAjax", "Auth")",
+            "headers": {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            "method": "GET"
+        }).done(function (result) {
+            if (result.status === 1) {
+                $("#acc").empty().html('<div class="account">'+
+                            '<div class="login">'+
+                            '<a href="@Url.Action("Login","Auth")">Đăng Nhập</a>'+
+                            '</div>'+
+                            '<div class="register">'+
+                            '<a href="@Url.Action("Signup","Auth")">Đăng Ký</a>'+
+                            '</div>'+
+                        '</div>');
+            }
+
+        }).fail(function (xhr) {
+            console.log("Logout failed");
+        });
+    }
+    $(function () {
+        getListCate();
+        getListLesson();
+        login();
+    })
+
+
+</script>
+
+
+

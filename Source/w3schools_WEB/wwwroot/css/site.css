@@ -1,0 +1,416 @@
+﻿/* live code editor*/
+#sourceCode, #targetCode {
+    border: 2px solid #ddd;
+    height: 75vh;
+    width: 100%;
+}
+
+#sourceCode {
+    resize: none !important;
+}
+/* end */
+
+.app {
+}
+
+    .app .header {
+        position: fixed;
+        width: 100%;
+        z-index: 10;
+    }
+
+        .app .header .navbar {
+        }
+
+            .app .header .navbar .navbar-branch {
+                margin-left: 50px;
+            }
+
+            .app .header .navbar .nav-menu {
+                margin-left: 80px;
+            }
+
+            .app .header .navbar .navbar-branch img {
+            }
+
+            .app .header .navbar .nav {
+            }
+
+                .app .header .navbar .nav .nav-item {
+                }
+
+                    .app .header .navbar .nav .nav-item:hover .nav-link {
+                        color: var(--white-color);
+                        background: var(--green-color);
+                    }
+
+                .app .header .navbar .nav .nav-link {
+                    padding: 20px;
+                    font-size: 1.8rem;
+                    color: var(--black-color);
+                    transition: all 0.4s ease 0s;
+                }
+
+                    .app .header .navbar .nav .nav-link.active {
+                    }
+
+            .app .header .navbar form {
+            }
+
+            .app .header .navbar input.search-input {
+                width: 200px;
+                height: 30px;
+                font-size: 1.4rem;
+                padding: 10px;
+            }
+
+.account {
+    display: flex;
+    margin-right: 30px;
+}
+
+    .account a {
+        font-size: 1.6rem;
+        color: var(--white-color);
+        background: var(--green-color);
+        padding: 8px 15px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: 0.4s;
+        display: block;
+    }
+
+    .account .register {
+        margin: 0 5px;
+    }
+
+    .account .login {
+        margin: 0 5px;
+    }
+
+    .account .register:hover a {
+        background: var(--green-color);
+        color: var(--white-color);
+    }
+
+    .account .register a {
+        background: transparent;
+        color: var(--black-color);
+    }
+
+button.btn-search {
+    height: 30px;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    background-color: var(--green-color);
+}
+
+.app .header .navbar .btn-group {
+    margin-right: 50px;
+    height: 30px;
+}
+
+    .app .header .navbar .btn-group.show {
+    }
+
+    .app .header .navbar .btn-group .btn-language {
+        font-size: 1.8rem;
+        width: 12rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .app .header .navbar .btn-group .dropdown-menu {
+    }
+
+        .app .header .navbar .btn-group .dropdown-menu.show {
+        }
+
+        .app .header .navbar .btn-group .dropdown-menu .dropdown-item {
+        }
+
+        .app .header .navbar .btn-group .dropdown-menu.show .dropdown-item {
+            font-size: 1.2rem;
+            padding: 8px;
+            text-align: center;
+        }
+
+.main {
+}
+
+    .main .content {
+    }
+
+        .main .content .sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0px;
+            height: 660px;
+            width: 15%;
+            overflow: hidden scroll;
+            background-color: var(--sidebar-bg);
+        }
+
+.sidebar .sidebar-list {
+    width: 100%;
+    padding: 0;
+}
+
+ul.sidebar-list .sidebar-item:nth-child(1) {
+}
+
+.sidebar .sidebar-list .sidebar-item {
+    width: 100%;
+    transition: all 0.4s ease 0s;
+    padding: 3px;
+}
+
+    .sidebar .sidebar-list .sidebar-item:hover {
+        background: var(--sidebar-hover);
+    }
+
+    .sidebar .sidebar-list .sidebar-item.active {
+        background: var(--green-color);
+    }
+
+        .sidebar .sidebar-list .sidebar-item.active a {
+            background: var(--green-color);
+            color: var(--white-color);
+        }
+
+    .sidebar .sidebar-list .sidebar-item .sidebar-link {
+        display: block;
+        font-size: 1.6rem;
+        padding: 0px 27px;
+        text-decoration: none;
+        color: var(--text-color);
+        transition: all 0.4s ease 0s;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        height: 1.8rem;
+        margin: 6px 0;
+    }
+
+ul.sidebar-list .sidebar-item:nth-child(1) > h1.sidebar-link {
+    font-size: 2rem !important;
+    height: 25px;
+}
+
+.main .content .main-content {
+    /* margin-top: 60px; */
+    padding: 10px 0px;
+}
+
+.main-content font {
+    font-size: 1.4rem;
+}
+
+.main-content .content-title {
+    font-size: 4.2rem;
+    font-weight: 400;
+}
+
+.btn-prevnext {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0px;
+}
+
+.main-content .btn-prevnext .btn-link {
+    padding: 12px 20px;
+    background: var(--green-color);
+    color: var(--white-color);
+    border-radius: 5px;
+    font-size: 1.8rem;
+}
+
+.btn-prevnext .btn-link.btn-prev {
+}
+
+    .btn-prevnext .btn-link.btn-prev i {
+    }
+
+.btn-prevnext .btn-link.btn-next {
+}
+
+    .btn-prevnext .btn-link.btn-next i {
+    }
+
+.main-content .intro {
+    background: rgb(217, 238, 225);
+    padding: 20px;
+    margin: 40px 0px;
+}
+
+    .main-content .intro p {
+        padding: 10px 0px;
+        font-size: 1.5rem;
+    }
+
+a.btn-link {
+    color: var(--white-color);
+    background: var(--green-color);
+    padding: 15px 20px;
+    border-radius: 7px;
+    margin: 15px 0px;
+    font-size: 1.5rem;
+    display: inline-block;
+    transition: 0.4s;
+}
+
+.main-content h2 {
+    font-size: 3.2rem;
+    margin: 20px 0px;
+}
+
+.main-content p span {
+    font-size: 1.5rem !important;
+    margin: 15px 0px;
+}
+
+.main-content .example {
+    background: rgb(231, 233, 235);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.w3-info > .w3-btn {
+    color: var(--white-color);
+    background: var(--green-color);
+    padding: 15px 20px !important;
+    border-radius: 7px !important;
+    margin: 15px 0px !important;
+    font-size: 1.5rem !important;
+    display: inline-block;
+}
+
+.main-content .example h3 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+/* .main-content .example pre {
+  background: var(--white-color);
+  padding: 20px 0px;
+  font-size: 1.4rem;
+  border-left: 5px solid var(--green-color);
+} */
+/* .main-content .example a.try {
+  padding: 10px 20px;
+  background: var(--green-color);
+  color: var(--white-color);
+  border-radius: 5px;
+  margin-top: 20px;
+  display: block;
+  width: 170px;
+  font-size: 1.5rem;
+} */
+.main-content .example .w3-code {
+    font-size: 1.6rem;
+    padding: 30px;
+    background: var(--white-color);
+    border-left: 5px solid var(--green-color);
+}
+
+.w3-code span.css-selector-color {
+    line-height: 1.5;
+}
+
+.w3-code span.css-property-color {
+    display: inline;
+    margin: 40px;
+}
+
+b {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 20px 0;
+    display: inline-block;
+}
+
+.text-block {
+    margin: 40px 0;
+}
+
+    .text-block div {
+        margin: 15px 0;
+    }
+
+    .text-block p {
+        margin: 10px 0;
+    }
+
+        .text-block p a {
+            font-size: 1.6rem;
+            color: var(--text-color);
+            text-decoration: underline;
+            display: block;
+            line-height: 3rem;
+            padding: 0 !important;
+        }
+
+    .text-block > p {
+        font-size: 1.5rem;
+        font-weight: 500;
+        opacity: .9;
+    }
+
+a.text-link {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    text-decoration: underline;
+    display: block;
+    line-height: 3rem;
+}
+
+footer.footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+    footer.footer p.w3-decription {
+        line-height: 30px;
+        font-size: 1.6rem;
+        font-weight: 100;
+        opacity: 0.7;
+    }
+
+    footer.footer p.w3-copyright {
+        line-height: 20px;
+        opacity: 0.7;
+        font-size: 1.4rem;
+    }
+
+    footer.footer a.logo-link {
+        display: block;
+        width: 100px;
+        height: 100px;
+        margin: auto;
+    }
+
+        footer.footer a.logo-link img {
+            width: 100%;
+        }
+
+/*end*/
+/*for admin page*/
+#listData .dx-toolbar .dx-toolbar-items-container {
+    height: 0px !important;
+}
+
+h5, #framesize {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.2rem;
+}
+
+.dx-texteditor-input {
+    font-size: 1.3rem;
+}
+
+button, input, optgroup, select, textarea {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+/*end*/

@@ -1,0 +1,314 @@
+﻿@{
+    ViewData["Title"] = "Role";
+    Layout = "Admin_Layout";
+}
+<div class="page-content">
+    <div class="p-4">
+        <div class="justify-content-end d-inline-flex w-100">
+            <button id="addBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-plus"></i>Add</button>            
+            <button id="refreshBtn" type="button" class="btn mr-2"><i class="mr-2 fa fa-refresh"></i>Refresh</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="text-center">
+        <div id="grid"></div>
+    </div>
+</div>
+<script>
+    var listRole = new DevExpress.data.CustomStore({
+        key: "roleId",
+        loadMode:"raw",
+        load: function () {
+            var d = $.Deferred();
+            $.ajax({
+                "async": false,
+                "crossDomain": true,
+                "url": "@Url.Action("GetListRoles", "Roles")",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "method": "GET"
+            }).done(function (result) {
+                d.resolve(result);
+            }).fail(function (xhr) {
+                console.log("failed");
+            });
+            return d.promise();
+        }
+    });
+    const table = "Users";
+
+    const columns = [{
+        caption: "User Id",
+        dataField: "userId",
+        visible: false,
+        allowEditing: false,
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+        caption: "User Name",
+        dataField: "userName",
+        validationRules: [{
+            type: "required",
+            message: "UserName field is required"
+        }]
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+        caption: "Password",
+        dataField: "passWord",
+        validationRules: [{
+            type: "required",
+            message: "Password field is required"
+        }]
+    },{
+        allowFixing: true,
+        allowHiding: true,
+        caption: "Email",
+        dataField: "email",
+        validationRules: [{
+            type: "required",
+            message: "Email field is required"
+        }]
+    }, {
+        allowFixing: true,
+        allowHiding: true,
+        caption: "Role Name",
+        dataField: "roleId",
+        lookup: {
+            dataSource: listRole,
+            valueExpr: 'roleId',
+            displayExpr: 'roleName',
+        },
+        validationRules: [{
+            type: "required",
+            message: "RoleName field is required"
+        }]
+    },{
+        dataField: "dateModified",
+        caption: "Date Modified",
+        alignment: "center",
+        dataType: "date",
+        format: "dd/MM/yyyy",
+        width: 120,
+        visible: false,
+        allowHiding: true,
+        showInColumnChooser: true,
+        allowEditing: false,
+    }, {
+        dataField: "dateCreated",
+        caption: "Date Created",
+        alignment: "center",
+        dataType: "date",
+        format: "dd/MM/yyyy",
+        width: 120,
+        visible: false,
+        allowHiding: true,
+        showInColumnChooser: true,
+        allowEditing: false,
+    },
+    {
+        dataField: "createdBy",
+        dataType: "string",
+        caption: "Created By",
+        alignment: "left",
+        width: 120,
+        visible: false,
+        allowHiding: true,
+        showInColumnChooser: true,
+        allowEditing: false,
+    },
+    {
+        dataField: "modifiedBy",
+        dataType: "string",
+        caption: "Modified By",
+        alignment: "left",
+        width: 120,
+        visible: false,
+        allowHiding: true,
+        showInColumnChooser: true,
+        allowEditing: false,
+        showInColumnChooser: true,
+    }];
+
+    var addBtn = $("#addBtn").dxButton({
+        text: "Thêm",
+        useIcon: true,
+        icon: "dx-icon dx-icon-inserttable",
+        onClick: function () {
+            dataGrid.addRow();
+        }
+    }).dxButton("instance");    
+
+    var refreshBtn = $("#refreshBtn").dxButton({
+        text: "Nạp dữ liệu",
+        useIcon: true,
+        icon: "refresh",
+        onClick: function () {
+            dataGrid.cancelEditData();
+            dataGrid.clearFilter();
+        }
+    }).dxButton("instance");
+
+    var store = new DevExpress.data.CustomStore({
+
+        load: function (loadOptions) {
+            var d = $.Deferred();
+            $.ajax({
+                url: "/" + table + "/GetList" + table,
+                method: 'get',
+                dataType: 'json',
+                crossDomain: true,
+                headers: {
+                    "Content-Type": 'application/json',
+                    "cache-control": "no-cache"
+                },
+            }).done(function (e) {
+                d.resolve(e);
+            }).fail(function (jqXhr, status, message) {
+                d.reject();
+                console.log(status + ": " + message);
+            });
+            return d.promise();
+        }
+    })
+
+    var source = new DevExpress.data.DataSource({
+        store: store
+    });
+
+    var dataGrid = $("#grid").dxDataGrid({
+        dataSource: source,
+        columnAutoWidth: true,
+        showBorders: true,
+        hoverStateEnabled: true,
+        repaintChangesOnly: true,
+        columnHidingEnabled: true,
+        showRowLines: true,
+        paging: {
+            pageSize: 10
+        },
+        pager: {
+            showPageSizeSelector: false,
+            allowedPageSizes: [10, 25, 50, 100]
+        },
+        rowAlternationEnabled: true,
+        editing: {
+            useIcons: true,
+            mode: 'row',
+            allowAdding: true,
+            allowDeleting: true,
+            allowUpdating: false,
+        },
+        columnFixing: {
+            enabled: true
+        },
+        columnChooser: {
+            enabled: true,
+            mode: "select"
+        },
+        filterRow: {
+            applyFilter: "auto",
+            applyFilterText: "Apply filter",
+            betweenEndText: "End",
+            betweenStartText: "Start",
+            operationDescriptions: {},
+            resetOperationText: "Reset",
+            showAllText: "",
+            showOperationChooser: true,
+            visible: true
+        },
+        onToolbarPreparing: function (e) {
+            e.toolbarOptions.visible = false;
+        },
+        onContextMenuPreparing: function (e) {
+            if (e.target == "header") {
+                if (!e.items) e.items = [];
+                e.items.push({
+                    text: "Hide",
+                    onItemClick: function () {
+                        $("#grid").dxDataGrid("columnOption", e.column.name, "visible", false);
+                    }
+                });
+                e.items.push({
+                    text: "Unhide",
+                    onItemClick: function () {
+                        dataGrid.showColumnChooser()
+                    }
+                });
+            }
+        },
+        remoteOperations: false,
+        onSaving: function (e) {
+            e.cancel = true;
+            var changes = dataGrid.option("editing.changes");
+
+            if (changes.length > 0) {
+                let d = changes[0];
+                if (d.type === "insert") {
+                    $.ajax({
+                        url: "/" + table + "/Insert" + table,
+                        method: "post",
+                        dataType: "json",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "cache-control": "no-cache",
+                        },
+                        data: JSON.stringify(d.data)
+                    }).done(function (rs) {
+                        if (rs.status == 1) {
+                            e.component.refresh(true).done(function () {
+                                e.component.cancelEditData();
+                            });
+                            DevExpress.ui.notify("Successful", "success", 2000);
+                        } else {
+                            DevExpress.ui.notify("error: " + rs.message, "warning", 2000);
+                        }
+                    }).fail(function () {
+                        DevExpress.ui.notify("Insert data failed", "warning", 2000);
+                    })
+                } else if (d.type === "remove") {
+                    $.ajax({
+                        url: "/" + table + "/Delete" + table+"?id="+d.key.userId,
+                        method: "get",
+                        dataType: "json",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "cache-control": "no-cache",
+                        }                        
+                    }).done(function (rs) {
+                        if (rs.status == 1) {
+                            e.component.refresh(true).done(function () {
+                                e.component.cancelEditData();
+                            });
+                            DevExpress.ui.notify("Successful", "success", 2000);
+                        } else {
+                            DevExpress.ui.notify("error: " + rs.message, "warning", 2000);
+                            DevExpress.ui.notify("error: " + rs.message, "warning", 2000);
+                        }
+                    }).fail(function () {
+                        DevExpress.ui.notify("Delete data failed", "warning", 2000);
+                    })
+                }
+            } else {
+                DevExpress.ui.notify("No data have been changed", "warning", 2000);
+            }
+        },        
+        headerFilter: {
+            allowSearch: true,
+            searchTimeout: 500,
+            texts: {},
+            visible: true,
+        },
+        columns: columns,
+
+    }).dxDataGrid("instance");
+
+    $(function () {
+        $(".breadcrumb").children().last().find("span").text("User");
+    })
+</script>
+
+
